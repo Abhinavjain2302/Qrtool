@@ -212,20 +212,27 @@ router.post('/qrgenerator', function (req, res, next) {
   var receiverAddress = req.body.raddress;
   var productDescription = req.body.proDescription;
   var receiverName = req.body.rname;
+  var imageBitmap=req.body.imageBitmap;
+  var latitude=req.body.latitude;
+  var longitude=req.body.longitude;
 
   console.log(receivercontact);
   console.log(receiverAddress);
   console.log(productDescription);
   console.log(receiverName);
+  console.log(imageBitmap);
 
-  connection.query("Insert into qrdata (rcontact,raddress,productdescription,rname) values('" + receivercontact + "','" + receiverAddress + "','" + productDescription + "','" + receiverName + "')", function (err, result, fields) {
+  connection.query("Insert into qrdata (rcontact,raddress,productdescription,rname,imageBitmap,latitude,longitude) values('" + receivercontact + "','" + receiverAddress + "','" + productDescription + "','" + receiverName + "','"+imageBitmap+"','"+latitude+"','"+longitude+"')", function (err, result, fields) {
     if (err) throw err;
 
     var result = {
       rmobile: receivercontact,
       raddress: receiverAddress,
       proDescription: productDescription,
-      rname: receiverName
+      rname: receiverName,
+      imageBitmap:imageBitmap,
+      latitude:latitude,
+      longitude:longitude
     }
 
 
@@ -233,6 +240,31 @@ router.post('/qrgenerator', function (req, res, next) {
       success: true,
       msg: 'qrdata successfully stored in database',
       data: result
+    });
+
+
+
+  })
+
+});
+
+//api for storing image and latitude longitude of person scanning the qr
+router.post('/scanqr', function (req, res, next) {
+
+  var imageBitmap=req.body.imageBitmap;
+  var latitude=req.body.latitude;
+  var longitude=req.body.longitude;
+
+  console.log(latitude);
+  console.log(longitude);
+  console.log(imageBitmap);
+
+  connection.query("Insert into scanimage (imageBitmap,latitude,longitude) values('"+imageBitmap+"','"+latitude+"','"+longitude+"')", function (err, result, fields) {
+    if (err) throw err;
+
+    res.json({
+      success: true,
+      msg: 'scanned image successfully stored in database'
     });
 
 
