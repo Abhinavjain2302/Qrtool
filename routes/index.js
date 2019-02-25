@@ -48,13 +48,13 @@ getProfile(req,res,next);
 
 //this route is called as POST when profile change is required
 router.post('/profile', function (req, res) {
- postProfile(res,res,next);
+ postProfile(req,res,next);
 });
 
 
 
 router.post('/qrgenerator', function (req, res, next) {
-qrGenerator(res,res,next);
+qrGenerator(req,res,next);
  
 });
 
