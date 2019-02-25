@@ -4,7 +4,7 @@ var dbconfig = require('../config/database');
 var connection = mysql.createConnection(dbconfig.connection);
 
 
-function qrGenerator(res,res,next){
+function qrGenerator(req,res,next){
   var receivercontact = req.body.rmobile;
   var receiverAddress = req.body.raddress;
   var productDescription = req.body.proDescription;

@@ -75,8 +75,8 @@ function isAuthenticated(req, res, next){
                 console.log(err);
                 return handleError(err, null, res);
             }
-            res.locals.driverId = decoded.id;
-            console.log("calling next now and " + res.locals.driverId);
+            res.locals.userId = decoded.id;
+            console.log("calling next now and " + res.locals.userId);
             return next();
         })
     }else{
