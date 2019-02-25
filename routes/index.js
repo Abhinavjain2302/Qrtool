@@ -10,7 +10,12 @@ var dbconfig = require('../config/database');
 var connection = mysql.createConnection(dbconfig.connection);
 
 
-
+var login=require('../controller/login');
+var register=require('../controller/register');
+var getProfile=require('../controller/getProfile');
+var postProfile=require('../controller/postProfile');
+var qrGenerator=require('../controller/qrGenerator');
+var scanqr=require('../controller/scanqr');
 
 /* GET home page. */
 router.get('/', isAuthenticated, function(req, res, next){
@@ -25,253 +30,40 @@ router.get('/', isAuthenticated, function(req, res, next){
 
 // api for login
 router.post('/login', function (req, res, next) {
-
-  var contact = req.body.contact;
-  var password = req.body.password;
-
-  console.log(typeof (req.body.contact));
-  console.log(contact);
-  console.log(password);
-  connection.query("select * from user where contact='" + contact + "'", function (err, result, fields) {
-    if (err) {
-      return handleError(err, null, res);
-    }
-    else {
-
-      if (result.length <= 0) {
-        console.log("user with contact number: " + contact + " does not exist");
-        msg = "user with contact number does not exist";
-        return handleError(null, msg, res);
-      }
-      console.log(result[0].password);
-
-
-      bcrypt.compare(password, result[0].password, function (err, isMatch) {
-        if (err) {
-          return handleError(err, null, res);
-        }
-        if (!isMatch) {
-          return handleError(null, "wrong password", res);
-        }
-        jwt.sign({ id: result[0].userId }, secret, function (err, token) {
-          if (err) handleError(err, null, res);
-          res.json({
-            success: true,
-            token: token
-
-          });
-        });
-      })
-    }
-  })
+ login(req,res,next);
 });
+
 
 //This api is for register of user
 router.post('/register', function (req, res, next) {
-
-  var name = req.body.name;
-  var email = req.body.email;
-  var password = req.body.password;
-  var contact = req.body.contact.slice(2 - 12);
-  console.log(contact);
-  //var bloodGroup=req.body.bloodgroup;
-
-
-  // var contact2=req.body.contact.slice(2-12);
-  // console.log(contact2);
-
-  connection.query("select contact from user", function (err, result, fields) {
-    if (err) throw err;
-    else {
-      for (var i = 0; i < result.length; i++) {
-
-        if (contact == result[i].contact) {
-          console.log("mobile number" + contact + "already exist");
-          return res.json({
-            success: true,
-            msg: 'mobile number already exist'
-          });
-        }
-
-      }
-      console.log("mobile number" + contact + "does not exist");
-
-      //  res.json({
-      //   msg: 'mobile number does not exist'
-      // })
-
-    }
-
-
-    var newUser = ({
-      name: name,
-      email: email,
-      password: password,
-      contact: contact
-
-    });
-
-
-    bcrypt.hash(newUser.password, 10, function (err, hash) {
-      if (err) throw err;
-      newUser.password = hash;
-
-
-
-      var sql = "Insert into user ( name , email , contact,password) values('" + newUser.name + "','" + newUser.email + "','" + newUser.contact + "','" + newUser.password + "')";
-      connection.query(sql, function (err, result) {
-        if (err) throw err;
-
-
-        return res.json({
-          success: true,
-          msg: 'user created'
-        });
-
-      });
-
-    });
-  })
+register(req,res,next);
 
 });
-
 
 
 router.get('/profile', function (req, res) {
-
-  jwt.verify(req.headers.authorization, secret, function (err, decoded) {
-    if (err) {
-      //console.log("%%%%%%%%%%%%%%%%%%%" + err);
-      res.json({
-        msg: "some error occured"
-      })
-      return;
-    }
-    var userId = decoded.id;
-
-
-    console.log("Connected form profile");
-    connection.query("select * from user where userId='" + userId + "'", function (err, result, fields) {
-
-      if (err) {
-        return handleError(err, null, res);
-      }
-      res.json({
-        success: true,
-        user: result[0]
-      });
-
-    });
-  });
+getProfile(req,res,next);
 });
-
-
-
 
 
 //this route is called as POST when profile change is required
 router.post('/profile', function (req, res) {
-
-  jwt.verify(req.headers.authorization, secret, function (err, decoded) {
-    if (err) {
-      //console.log("%%%%%%%%%%%%%%%%%%%" + err);
-      res.json({
-        msg: "some error occured"
-      })
-      return;
-    }
-    var userId = decoded.id;
-
-
-    var id = userId;
-    var name = req.body.name;
-    var email = req.body.email;
-
-    console.log("Connected form edit profile");
-
-    var sql = "update user SET name='" + name + "', email='" + email + "' where userId='" + id + "'";
-    console.log(sql);
-    connection.query(sql, function (err, result, fields) {
-      if (err) {
-        handleError(err, null, res);
-      }
-      res.json({
-        success: true
-      })
-    });
-
-
-  });
+ postProfile(res,res,next);
 });
 
 
 
 router.post('/qrgenerator', function (req, res, next) {
-
-  var receivercontact = req.body.rmobile;
-  var receiverAddress = req.body.raddress;
-  var productDescription = req.body.proDescription;
-  var receiverName = req.body.rname;
-  var imageBitmap=req.body.imageBitmap;
-  var latitude=req.body.latitude;
-  var longitude=req.body.longitude;
-
-  console.log(receivercontact);
-  console.log(receiverAddress);
-  console.log(productDescription);
-  console.log(receiverName);
-  console.log(imageBitmap);
-
-  connection.query("Insert into qrdata (rcontact,raddress,productdescription,rname,imageBitmap,latitude,longitude) values('" + receivercontact + "','" + receiverAddress + "','" + productDescription + "','" + receiverName + "','"+imageBitmap+"','"+latitude+"','"+longitude+"')", function (err, result, fields) {
-    if (err) throw err;
-
-    var result = {
-      rmobile: receivercontact,
-      raddress: receiverAddress,
-      proDescription: productDescription,
-      rname: receiverName,
-      imageBitmap:imageBitmap,
-      latitude:latitude,
-      longitude:longitude
-    }
-
-
-    res.json({
-      success: true,
-      msg: 'qrdata successfully stored in database',
-      data: result
-    });
-
-
-
-  })
-
+qrGenerator(res,res,next);
+ 
 });
 
 //api for storing image and latitude longitude of person scanning the qr
 router.post('/scanqr', function (req, res, next) {
-
-  var imageBitmap=req.body.imageBitmap;
-  var latitude=req.body.latitude;
-  var longitude=req.body.longitude;
-
-  console.log(latitude);
-  console.log(longitude);
-  console.log(imageBitmap);
-
-  connection.query("Insert into scanimage (imageBitmap,latitude,longitude) values('"+imageBitmap+"','"+latitude+"','"+longitude+"')", function (err, result, fields) {
-    if (err) throw err;
-
-    res.json({
-      success: true,
-      msg: 'scanned image successfully stored in database'
-    });
-
-
-
-  })
-
+scanqr(req,res,next);
 });
+
+
 
 
 //this function checks if the user is in session or not
@@ -295,6 +87,9 @@ function isAuthenticated(req, res, next){
         });
     }
 }
+
+
+
 
 
 
