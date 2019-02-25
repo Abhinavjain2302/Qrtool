@@ -13,6 +13,7 @@ function qrGenerator(req,res,next){
   var latitude=req.body.latitude;
   var longitude=req.body.longitude;
 
+  console.log(req.body);
   console.log(receivercontact);
   console.log(receiverAddress);
   console.log(productDescription);
