@@ -16,6 +16,8 @@ var getProfile=require('../controller/getProfile');
 var postProfile=require('../controller/postProfile');
 var qrGenerator=require('../controller/qrGenerator');
 var scanqr=require('../controller/scanqr');
+var scanResult=require('../controller/scanResult');
+var qrHistory=require('../controller/qrHistory');
 
 /* GET home page. */
 router.get('/', isAuthenticated, function(req, res, next){
@@ -63,7 +65,13 @@ router.post('/scanqr', function (req, res, next) {
 scanqr(req,res,next);
 });
 
+router.post('/scanresult', function (req, res, next) {
+scanResult(req,res,next);
+});
 
+router.get('/qrhistory', function (req, res,next) {
+qrHistory(req,res,next);
+});
 
 
 //this function checks if the user is in session or not

@@ -7,7 +7,7 @@ var dbconfig = require('../config/database');
 var connection = mysql.createConnection(dbconfig.connection);
 
 
-function scanqr(req,res,next){
+function qrHistory(req,res,next){
   jwt.verify(req.headers.authorization, secret, function (err, decoded) {
     if (err) {
       //console.log("%%%%%%%%%%%%%%%%%%%" + err);
@@ -17,25 +17,16 @@ function scanqr(req,res,next){
       return;
     }
 
-       var userId = decoded.id;
+  var userId = decoded.id;
 
-  var imageBitmap=req.body.imageBitmap;
-  var latitude=req.body.latitude;
-  var longitude=req.body.longitude;
-  var date=req.body.date;
-  var time=req.body.time;
 
-  console.log(req.body);
-  console.log(latitude);
-  console.log(longitude);
-  console.log(imageBitmap);
-
-  connection.query("Insert into scanimage (imageBitmap,latitude,longitude,date,time) values('"+imageBitmap+"','"+latitude+"','"+longitude+"','"+date+"','"+time+"')", function (err, result, fields) {
+  connection.query("select * from qrdata where creatorId='"+userId+"'", function (err, result, fields) {
     if (err) throw err;
-
+     console.log(result);
+    
     res.json({
       success: true,
-      msg: 'scanned image successfully stored in database'
+      data:result
     });
 
   })
@@ -57,4 +48,4 @@ function handleError(err, msg, res) {
 }
 
 
-module.exports=scanqr;
+module.exports=qrHistory;

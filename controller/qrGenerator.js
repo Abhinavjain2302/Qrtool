@@ -39,21 +39,24 @@ function qrGenerator(req,res,next){
   connection.query("Insert into qrdata (rcontact,raddress,productdescription,rname,imageBitmap,latitude,longitude,creatorId,date,time) values('" + receivercontact + "','" + receiverAddress + "','" + productDescription + "','" + receiverName + "','"+imageBitmap+"','"+latitude+"','"+longitude+"','"+userId+"','"+date+"','"+time+"')", function (err, result, fields) {
     if (err) throw err;
 
-    var result = {
-      rmobile: receivercontact,
-      raddress: receiverAddress,
-      proDescription: productDescription,
-      rname: receiverName,
-      imageBitmap:imageBitmap,
-      latitude:latitude,
-      longitude:longitude
-    }
+   console.log("qrId"+result.insertId)
+    // var resultData = {
+    //   rmobile: receivercontact,
+    //   raddress: receiverAddress,
+    //   proDescription: productDescription,
+    //   rname: receiverName,
+    //   imageBitmap:imageBitmap,
+    //   latitude:latitude,
+    //   longitude:longitude,
+    //   qrId:result.insertId
+
+    // }
 
 
     res.json({
       success: true,
       msg: 'qrdata successfully stored in database',
-      data: result
+      qrId: result.insertId
     });
 
 
