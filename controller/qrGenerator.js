@@ -15,7 +15,7 @@ function qrGenerator(req,res,next){
       })
       return;
     }
-})
+
        var userId = decoded.id;
 
 
@@ -26,6 +26,8 @@ function qrGenerator(req,res,next){
   var imageBitmap=req.body.imageBitmap;
   var latitude=req.body.latitude;
   var longitude=req.body.longitude;
+  var date=req.body.date;
+  var time=req.body.time;
 
   console.log(req.body);
   console.log(receivercontact);
@@ -34,7 +36,7 @@ function qrGenerator(req,res,next){
   console.log(receiverName);
   console.log(imageBitmap);
 
-  connection.query("Insert into qrdata (rcontact,raddress,productdescription,rname,imageBitmap,latitude,longitude,creatorId) values('" + receivercontact + "','" + receiverAddress + "','" + productDescription + "','" + receiverName + "','"+imageBitmap+"','"+latitude+"','"+longitude+"','"+userId+"')", function (err, result, fields) {
+  connection.query("Insert into qrdata (rcontact,raddress,productdescription,rname,imageBitmap,latitude,longitude,creatorId,date,time) values('" + receivercontact + "','" + receiverAddress + "','" + productDescription + "','" + receiverName + "','"+imageBitmap+"','"+latitude+"','"+longitude+"','"+userId+"','"+date+"','"+time+"')", function (err, result, fields) {
     if (err) throw err;
 
     var result = {
@@ -55,7 +57,7 @@ function qrGenerator(req,res,next){
     });
 
 
-
+})
   })
  } 
 
