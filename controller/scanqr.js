@@ -27,4 +27,18 @@ function scanqr(req,res,next){
 
 }
 
+//this function is a general error handler
+function handleError(err, msg, res) {
+  console.log(err);
+  if (msg == undefined) {
+    msg = "there was some error at the server"
+  }
+  return res.json({
+    success: false,
+    msg: msg,
+    err: err
+  })
+}
+
+
 module.exports=scanqr;

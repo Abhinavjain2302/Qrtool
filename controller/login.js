@@ -8,8 +8,8 @@ var connection = mysql.createConnection(dbconfig.connection);
 
 
 
-function login(req,res,next){
-  
+var login=function (req, res, next) {
+
   var contact = req.body.contact;
   var password = req.body.password;
 
@@ -25,7 +25,9 @@ function login(req,res,next){
       if (result.length <= 0) {
         console.log("user with contact number: " + contact + " does not exist");
         msg = "user with contact number does not exist";
+        debugger
         return handleError(null, msg, res);
+        
       }
       console.log(result[0].password);
 
@@ -50,5 +52,19 @@ function login(req,res,next){
   })
 }
 
+//this function is a general error handler
+function handleError(err, msg, res) {
+  console.log(err);
+  if (msg == undefined) {
+    msg = "there was some error at the server"
+  }
+  return res.json({
+    success: false,
+    msg: msg,
+    err: err
+  })
+}
 
-module.exports=login;
+
+
+module.exports = login;

@@ -1,3 +1,5 @@
+var jwt = require('jsonwebtoken');
+var secret = "supersecret";
 var mysql = require('mysql');
 
 var dbconfig = require('../config/database');
@@ -5,6 +7,18 @@ var connection = mysql.createConnection(dbconfig.connection);
 
 
 function qrGenerator(req,res,next){
+  jwt.verify(req.headers.authorization, secret, function (err, decoded) {
+    if (err) {
+      //console.log("%%%%%%%%%%%%%%%%%%%" + err);
+      res.json({
+        msg: "some error occured"
+      })
+      return;
+    }
+})
+       var userId = decoded.id;
+
+
   var receivercontact = req.body.rmobile;
   var receiverAddress = req.body.raddress;
   var productDescription = req.body.proDescription;
@@ -20,7 +34,7 @@ function qrGenerator(req,res,next){
   console.log(receiverName);
   console.log(imageBitmap);
 
-  connection.query("Insert into qrdata (rcontact,raddress,productdescription,rname,imageBitmap,latitude,longitude) values('" + receivercontact + "','" + receiverAddress + "','" + productDescription + "','" + receiverName + "','"+imageBitmap+"','"+latitude+"','"+longitude+"')", function (err, result, fields) {
+  connection.query("Insert into qrdata (rcontact,raddress,productdescription,rname,imageBitmap,latitude,longitude,creatorId) values('" + receivercontact + "','" + receiverAddress + "','" + productDescription + "','" + receiverName + "','"+imageBitmap+"','"+latitude+"','"+longitude+"','"+userId+"')", function (err, result, fields) {
     if (err) throw err;
 
     var result = {
@@ -43,7 +57,20 @@ function qrGenerator(req,res,next){
 
 
   })
-}
+ } 
 
+
+//this function is a general error handler
+function handleError(err, msg, res) {
+  console.log(err);
+  if (msg == undefined) {
+    msg = "there was some error at the server"
+  }
+  return res.json({
+    success: false,
+    msg: msg,
+    err: err
+  })
+}
 
 module.exports=qrGenerator;

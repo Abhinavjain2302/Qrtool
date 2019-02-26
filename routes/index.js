@@ -41,13 +41,13 @@ register(req,res,next);
 });
 
 
-router.get('/profile', function (req, res) {
+router.get('/profile', function (req, res,next) {
 getProfile(req,res,next);
 });
 
 
 //this route is called as POST when profile change is required
-router.post('/profile', function (req, res) {
+router.post('/profile', function (req, res,next) {
  postProfile(req,res,next);
 });
 
