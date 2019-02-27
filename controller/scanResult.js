@@ -27,14 +27,58 @@ function scanResult(req,res,next){
   console.log(scanData.split("qrId:")[1]);
   var qrId=scanData.split("qrId:")[1];
 
+  var promise =new Promise(function(resolve,reject){
   connection.query("Insert into scanqr (qrId,userId) values('"+qrId+"','"+userId+"')", function (err, result, fields) {
-    if (err) throw err;
+    if (err) {
+      console.log(err);
+      console.log("db connection problem");
+      res.json({
+        success:false
+      })
+      reject("success false");
+    }else{
+      resolve("success");
 
     res.json({
       success: true
     });
+   }
+  })
+})
+
+  promise.then(function(value){
+  console.log(value);
+  connection.query("select * from storeimage where userId='"+userId+"'",function(err,result2){
+   if (err) {
+      console.log(err);
+      console.log("db connection problem");
+      res.json({
+        success:false
+      })
+    }else{
+     connection.query("UPDATE storeimage SET qrId ='"+qrId+"' where imageId='"+result2[result2.length-1].imageId+"'",function(err,result3){
+    if (err) {
+      console.log(err);
+      console.log("db connection problem");
+      res.json({
+        success:false
+      })
+    }else{
+      console.log("qrId stored in storeimage");
+    }
+
+
+     })
+
+     console.log(result2);
+    }
+   
+
+  })    
 
   })
+
+
 })
 
 }

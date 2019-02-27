@@ -30,7 +30,7 @@ function scanqr(req,res,next){
   console.log(longitude);
   console.log(imageBitmap);
 
-  connection.query("Insert into storeimage (imageBitmap,latitude,longitude,date,time) values('"+imageBitmap+"','"+latitude+"','"+longitude+"','"+date+"','"+time+"')", function (err, result, fields) {
+  connection.query("Insert into storeimage (imageBitmap,latitude,longitude,date,time,userId) values('"+imageBitmap+"','"+latitude+"','"+longitude+"','"+date+"','"+time+"','"+userId+"')", function (err, result, fields) {
     if (err) throw err;
 
     res.json({
