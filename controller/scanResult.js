@@ -27,7 +27,7 @@ function scanResult(req,res,next){
   console.log(scanData.split("qrId:")[1]);
   var qrId=scanData.split("qrId:")[1];
 
-  var promise =new Promise(function(resolve,reject){
+  //var promise =new Promise(function(resolve,reject){
   connection.query("Insert into scanqr (qrId,userId) values('"+qrId+"','"+userId+"')", function (err, result, fields) {
     if (err) {
       console.log(err);
@@ -35,19 +35,15 @@ function scanResult(req,res,next){
       res.json({
         success:false
       })
-      reject("success false");
+      //reject("success false");
     }else{
-      resolve("success");
+     //resolve("success");
 
-    res.json({
-      success: true
-    });
-   }
-  })
-})
+   
+//})
 
-  promise.then(function(value){
-  console.log(value);
+ // promise.then(function(value){
+  //console.log(value);
   connection.query("select * from storeimage where userId='"+userId+"'",function(err,result2){
    if (err) {
       console.log(err);
@@ -65,6 +61,19 @@ function scanResult(req,res,next){
       })
     }else{
       console.log("qrId stored in storeimage");
+      connection.query("UPDATE scanqr SET imageId ='"+result2[result2.length-1].imageId+"' where scanId='"+result.insertId+"'",function(err,result4){
+    if (err) {
+      console.log(err);
+      console.log("db connection problem");
+      res.json({
+        success:false
+      })
+    }else{
+       console.log(result.insertId);
+       console.log("imageId stored in scanqr table");
+      }
+
+       })
     }
 
 
@@ -74,9 +83,16 @@ function scanResult(req,res,next){
     }
    
 
+  })
+
+
+   res.json({
+      success: true
+    });
+   }
   })    
 
-  })
+  //})
 
 
 })

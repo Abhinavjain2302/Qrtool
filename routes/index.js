@@ -18,6 +18,7 @@ var qrGenerator=require('../controller/qrGenerator');
 var scanqr=require('../controller/scanqr');
 var scanResult=require('../controller/scanResult');
 var qrHistory=require('../controller/qrHistory');
+var scanHistory=require('../controller/scanHistory');
 
 /* GET home page. */
 router.get('/', isAuthenticated, function(req, res, next){
@@ -71,6 +72,11 @@ scanResult(req,res,next);
 
 router.get('/qrhistory', function (req, res,next) {
 qrHistory(req,res,next);
+});
+
+
+router.post('/scanhistory', function (req, res,next) {
+scanHistory(req,res,next);
 });
 
 
