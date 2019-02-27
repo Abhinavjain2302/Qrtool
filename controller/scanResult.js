@@ -28,7 +28,7 @@ function scanResult(req,res,next){
   var qrId=scanData.split("qrId:")[1];
 
   //var promise =new Promise(function(resolve,reject){
-  connection.query("Insert into scanqr (qrId,userId) values('"+qrId+"','"+userId+"')", function (err, result, fields) {
+  connection.query("Insert into scanqr (scanqrId,userId) values('"+qrId+"','"+userId+"')", function (err, result, fields) {
     if (err) {
       console.log(err);
       console.log("db connection problem");
