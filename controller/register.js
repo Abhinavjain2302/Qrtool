@@ -10,7 +10,10 @@ function register(req,res,next){
   var email = req.body.email;
   var password = req.body.password;
   var contact = req.body.contact.slice(2 - 12);
+  var usertype=req.body.usertype;
   console.log(contact);
+  console.log(req.body);
+  console.log(usertype);
 
 
   connection.query("select contact from user", function (err, result, fields) {
@@ -36,7 +39,8 @@ function register(req,res,next){
       name: name,
       email: email,
       password: password,
-      contact: contact
+      contact: contact,
+      usertype:usertype
 
     });
 
@@ -47,7 +51,7 @@ function register(req,res,next){
 
 
 
-      var sql = "Insert into user ( name , email , contact,password) values('" + newUser.name + "','" + newUser.email + "','" + newUser.contact + "','" + newUser.password + "')";
+      var sql = "Insert into user ( name , email , contact,password,usertype) values('" + newUser.name + "','" + newUser.email + "','" + newUser.contact + "','" + newUser.password + "','"+usertype+"')";
       connection.query(sql, function (err, result) {
         if (err) throw err;
 

@@ -43,7 +43,8 @@ var login=function (req, res, next) {
           if (err) handleError(err, null, res);
           res.json({
             success: true,
-            token: token
+            token: token,
+            usertype:result[0].usertype
 
           });
         });
