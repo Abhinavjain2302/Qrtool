@@ -28,6 +28,7 @@ function qrGenerator(req,res,next){
   var longitude=req.body.longitude;
   var date=req.body.date;
   var time=req.body.time;
+  var packagename=req.body.packagename;
 
   console.log(req.body);
   console.log(receivercontact);
@@ -36,7 +37,7 @@ function qrGenerator(req,res,next){
   console.log(receiverName);
   console.log(imageBitmap);
 
-  connection.query("Insert into qrdata (rcontact,raddress,productdescription,rname,imageBitmap,latitude,longitude,creatorId,date,time) values('" + receivercontact + "','" + receiverAddress + "','" + productDescription + "','" + receiverName + "','"+imageBitmap+"','"+latitude+"','"+longitude+"','"+userId+"','"+date+"','"+time+"')", function (err, result, fields) {
+  connection.query("Insert into qrdata (rcontact,raddress,productdescription,rname,imageBitmap,latitude,longitude,creatorId,date,time,packagename) values('" + receivercontact + "','" + receiverAddress + "','" + productDescription + "','" + receiverName + "','"+imageBitmap+"','"+latitude+"','"+longitude+"','"+userId+"','"+date+"','"+time+"','"+packagename+"')", function (err, result, fields) {
     if (err) throw err;
 
    console.log("qrId"+result.insertId)

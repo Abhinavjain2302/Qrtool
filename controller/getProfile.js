@@ -20,7 +20,7 @@ jwt.verify(req.headers.authorization, secret, function (err, decoded) {
 
 
     console.log("Connected form profile");
-    connection.query("select * from user where userId='" + userId + "'", function (err, result, fields) {
+    connection.query("select * from user where userId='" + userId + "'", function(err, result) {
 
       if (err) {
         return handleError(err, null, res);
