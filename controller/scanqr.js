@@ -10,7 +10,7 @@ var connection = mysql.createConnection(dbconfig.connection);
 function scanqr(req,res,next){
   jwt.verify(req.headers.authorization, secret, function (err, decoded) {
     if (err) {
-      //console.log("%%%%%%%%%%%%%%%%%%%" + err);
+     
       res.json({
         msg: "some error occured"
       })

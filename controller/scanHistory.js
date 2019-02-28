@@ -23,7 +23,7 @@ function scanHistory(req,res,next){
   var qrId=req.body.id;
 
 
-  var sql="SELECT imageBitmap,latitude,longitude,scanqrId,storeimage.date,storeimage.time,scanqr.userId,user.name,user.contact FROM storeimage LEFT JOIN scanqr ON storeimage.imageId=scanqr.imageId LEFT JOIN user ON user.userId=scanqr.userId WHERE (scanqr.scanqrId='"+qrId+"')"
+  var sql="SELECT imageBitmap,'Scan' AS designation,latitude,longitude,scanqrId,storeimage.date,storeimage.time,scanqr.userId,user.name,user.contact FROM storeimage LEFT JOIN scanqr ON storeimage.imageId=scanqr.imageId LEFT JOIN user ON user.userId=scanqr.userId WHERE (scanqr.scanqrId='"+qrId+"')"
   connection.query(sql, function (err, result, fields) {
       if (err) {
       console.log(err);
@@ -31,12 +31,12 @@ function scanHistory(req,res,next){
       res.json({
         success:false
       })
-      //reject("success false");
+      
     }else{
            console.log("result");
           console.log(result);
 
-       var sql2="SELECT imageBitmap,'source' AS designation,latitude,longitude,qrdata.id,qrdata.date ,qrdata.time,qrdata.creatorId,user.name,user.contact FROM qrdata LEFT JOIN user ON user.userId=qrdata.creatorId WHERE (qrdata.id='"+qrId+"')"
+       var sql2="SELECT imageBitmap,'Source' AS designation,latitude,longitude,qrdata.id,qrdata.date ,qrdata.time,qrdata.creatorId,user.name,user.contact FROM qrdata LEFT JOIN user ON user.userId=qrdata.creatorId WHERE (qrdata.id='"+qrId+"')"
       connection.query(sql2, function (err, result2) {
       if (err) {
       console.log(err);

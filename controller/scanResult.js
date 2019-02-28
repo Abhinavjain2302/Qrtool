@@ -10,7 +10,7 @@ var connection = mysql.createConnection(dbconfig.connection);
 function scanResult(req,res,next){
   jwt.verify(req.headers.authorization, secret, function (err, decoded) {
     if (err) {
-      //console.log("%%%%%%%%%%%%%%%%%%%" + err);
+     
       res.json({
         msg: "some error occured"
       })
@@ -27,7 +27,7 @@ function scanResult(req,res,next){
   console.log(scanData.split("qrId:")[1]);
   var qrId=scanData.split("qrId:")[1];
 
-  //var promise =new Promise(function(resolve,reject){
+ 
   connection.query("Insert into scanqr (scanqrId,userId) values('"+qrId+"','"+userId+"')", function (err, result, fields) {
     if (err) {
       console.log(err);
@@ -35,15 +35,12 @@ function scanResult(req,res,next){
       res.json({
         success:false
       })
-      //reject("success false");
+     
     }else{
-     //resolve("success");
+   
 
    
-//})
 
- // promise.then(function(value){
-  //console.log(value);
   connection.query("select * from storeimage where userId='"+userId+"'",function(err,result2){
    if (err) {
       console.log(err);
